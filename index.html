@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Triples Generator</title>
+<style>
+body { font-family: monospace; margin: 30px; }
+textarea { font-family: monospace; }
+.btn { font-family: monospace; }
+</style>
+</head>
+<body>
+
+<h3>Triples Generator</h3>
+
+<table cellpadding="4" cellspacing="4">
+<tr>
+  <td valign="top"><b>Row 1</b><br><textarea id="box1" rows="5" cols="20">pop1, pop2</textarea></td>
+  <td valign="top"><b>Row 2</b><br><textarea id="box2" rows="5" cols="20">pop3</textarea></td>
+  <td valign="top"><b>Row 3</b><br><textarea id="box3" rows="5" cols="20">pop4, pop5, pop6</textarea></td>
+</tr>
+</table>
+
+<p>
+<button id="generateBtn" class="btn">Generate</button>
+<button id="clearBtn" class="btn">Clear</button>
+</p>
+
+<p>
+<b>Output</b> <small id="count"></small>
+<button id="copyBtn" class="btn">Copy</button>
+<span id="toast" style="display:none;">Copied</span>
+</p>
+
+<textarea id="output" rows="16" cols="64" readonly></textarea>
+
+<script>
+var box1 = document.getElementById('box1');
+var box2 = document.getElementById('box2');
+var box3 = document.getElementById('box3');
+var output = document.getElementById('output');
+var countEl = document.getElementById('count');
+var toast = document.getElementById('toast');
+
+function parseInput(el) {
+  return el.value.split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; });
+}
+
+function generate() {
+  var a = parseInput(box1);
+  var b = parseInput(box2);
+  var c = parseInput(box3);
+  var lines = [];
+  for (var i = 0; i < a.length; i++) {
+    for (var j = 0; j < b.length; j++) {
+      for (var k = 0; k < c.length; k++) {
+        lines.push(a[i] + ' ' + b[j] + ' ' + c[k]);
+      }
+    }
+  }
+  output.value = lines.join('\n');
+  countEl.textContent = '(' + lines.length + (lines.length === 1 ? ' triple)' : ' triples)');
+}
+
+function clearAll() {
+  box1.value = '';
+  box2.value = '';
+  box3.value = '';
+  output.value = '';
+  countEl.textContent = '';
+}
+
+document.getElementById('generateBtn').onclick = generate;
+document.getElementById('clearBtn').onclick = clearAll;
+document.getElementById('copyBtn').onclick = function() {
+  if (!output.value) return;
+  output.select();
+  document.execCommand('copy');
+  toast.style.display = 'inline';
+  setTimeout(function() { toast.style.display = 'none'; }, 1500);
+};
+
+generate();
+</script>
+
+</body>
+</html>
